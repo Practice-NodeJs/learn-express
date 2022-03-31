@@ -1,5 +1,3 @@
-let currentPage = 1;
-
 const loadPage = (page) => {
   $.ajax({
     url: `/account?page=${page}`,
@@ -19,16 +17,26 @@ const loadPage = (page) => {
     .catch((err) => console.log("Log :  API lỗi"));
 };
 
-const clickPage = (page) => {
-  currentPage = page;
-  loadPage(currentPage);
-};
+loadPage(1);
 
-const prevPage = () => {
-  loadPage(currentPage - 1);
-};
-
-const nextPage = () => {
-  currentPage = page;
-  loadPage(currentPage + 1);
-};
+$(".pagination").pagination({
+  dataSource: (done) => {
+    $.ajax({
+      type: "GET",
+      url: `/account`,
+      success: (data) => {
+        done(data);
+      },
+    });
+  },
+  pageSize: 4,
+  afterPageOnClick: (e, page) => {
+    loadPage(page);
+  },
+  afterPreviousOnClick: (e, page) => {
+    loadPage(page);
+  },
+  afterNextOnClick: (e, page) => {
+    loadPage(page);
+  },
+});
